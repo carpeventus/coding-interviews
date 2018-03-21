@@ -14,40 +14,40 @@
 
 ```java
 public static int maxProductAfterCutting(int length) {
-  	// 长度为1时不满足题意，返回0
-  	if (length < 2) {
-    	return 0;
-  	}
-  	// f(2)
-  	if (length == 2) {
-    	return 1;
-  	}
-  	// f(3)
-  	if (length == 3) {
-    	return 2;
-  	}
-  	// 加1是因为需要访问到products[length]
-  	int[] products = new int[length + 1];
-  	// 下面这三个存的不是f(1)、f(2)、f(3)，只是单纯的长度而已
-  	products[1] = 1;
-  	products[2] = 2;
-  	products[3] = 3;
-  	// 从products[4]到products[length]放的是f(4)~f(n)的值
-  	for (int i = 4; i <= length; i++) {
-    	int max = 0;
-
-    	// 对所有相乘情况进行遍历求出f(i)的最优解
-    	for (int j = 1; j <= i / 2; j++) {
-      	int product = products[j] * products[i - j];
-      	if (product > max) {
-        	max = product;
-      	}
+    // 长度为1时不满足题意，返回0
+    if (length < 2) {
+        return 0;
     }
-    	// 得到f(i)的最优解
-    	products[i] = max;
-  	}
-  	// 返回f(n)
-  	return products[length];
+    // f(2)
+    if (length == 2) {
+        return 1;
+    }
+    // f(3)
+    if (length == 3) {
+        return 2;
+    }
+    // 加1是因为需要访问到products[length]
+    int[] products = new int[length + 1];
+    // 下面这三个存的不是f(1)、f(2)、f(3)，只是单纯的长度而已
+    products[1] = 1;
+    products[2] = 2;
+    products[3] = 3;
+    // 从products[4]到products[length]放的是f(4)~f(n)的值
+    for (int i = 4; i <= length; i++) {
+        int max = 0;
+
+        // 对所有相乘情况进行遍历求出f(i)的最优解
+        for (int j = 1; j <= i / 2; j++) {
+            int product = products[j] * products[i - j];
+            if (product > max) {
+                max = product;
+            }
+        }
+        // 得到f(i)的最优解
+        products[i] = max;
+    }
+    // 返回f(n)
+    return products[length];
 }
 ```
 
@@ -65,28 +65,28 @@ public static int maxProductAfterCutting(int length) {
 
 ```java
 public static int maxProductAfterCutting2(int length) {
-  	// 长度为1时不满足题意，返回0
-  	if (length < 2) {
-    	return 0;
-  	}
-  	// f(2)
-  	if (length == 2) {
-    	return 1;
-  	}
-  	// f(3)
-  	if (length == 3) {
-    	return 2;
-  	}
-  	// 	统计能分出多少段长度为3的绳子
-  	int timesOf3 = length / 3;
-  	// 如果最有只剩下长度为1的绳子，需要退一步，得到长度为4的绳子，重新分成2*2的
-  	if (length - timesOf3 * 3 == 1) {
-    	timesOf3--;
-  	}
-  	// 统计能分出多少段长度为2的绳子
-  	// 到这步length - timesOf3 * 3的值只可能是0,2,4，所以timesOf2只可能是0, 1, 2
-  	int timesOf2 = (length - timesOf3 * 3) / 2;
-  	return (int) Math.pow(3, timesOf3) * (int) Math.pow(2, timesOf2);
+    // 长度为1时不满足题意，返回0
+    if (length < 2) {
+        return 0;
+    }
+    // f(2)
+    if (length == 2) {
+        return 1;
+    }
+    // f(3)
+    if (length == 3) {
+        return 2;
+    }
+    // 统计能分出多少段长度为3的绳子
+    int timesOf3 = length / 3;
+    // 如果最有只剩下长度为1的绳子，需要退一步，得到长度为4的绳子，重新分成2*2的
+    if (length - timesOf3 * 3 == 1) {
+        timesOf3--;
+    }
+    // 统计能分出多少段长度为2的绳子
+    // 到这步length - timesOf3 * 3的值只可能是0,2,4，所以timesOf2只可能是0, 1, 2
+    int timesOf2 = (length - timesOf3 * 3) / 2;
+    return (int) Math.pow(3, timesOf3) * (int) Math.pow(2, timesOf2);
 
 }
 ```
