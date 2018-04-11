@@ -83,7 +83,7 @@ public class ReOrderArray {
             // 右到左找出第一个奇数
             while (pBegin < pEnd && !p.test(array[pEnd]))
                 pEnd--;
-		   // 交换两个奇数和偶数，奇数被换到了前面，偶数换到了后面
+           // 交换两个奇数和偶数，奇数被换到了前面，偶数换到了后面
             if (pBegin < pEnd) {
                 int temp = array[pBegin];
                 array[pBegin] = array[pEnd];
