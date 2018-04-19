@@ -76,7 +76,7 @@ public class MoreThanHalf {
                 count = 1;
             }
 
-            if (array[i] == result) count++;
+            else if (array[i] == result) count++;
             else count--;
         }
 

@@ -91,20 +91,20 @@ select方法是通用的选择排名为k的元素，只要参数传入n / 2即�
 
 ```java
 public int findNumMoreThanHalf(int[] array) {
-  	if (array == null || array.length == 0) return 0;
+    if (array == null || array.length == 0) return 0;
 
-  	int count = 1;
-  	int result = array[0];
-  	for (int i = 1; i < array.length; i++) {
-    	if (count == 0) {
-      	result = array[i];
-      	count = 1;
-    	}
+    int count = 1;
+    int result = array[0];
+    for (int i = 1; i < array.length; i++) {
+    if (count == 0) {
+        result = array[i];
+        count = 1;
+    }
 
-    	if (array[i] == result) count++;
-    	else count--;
-  	}
-  	return checkMoreThanHalf(array, result);
+    else if (array[i] == result) count++;
+    else count--;
+    }
+    return checkMoreThanHalf(array, result);
 }
 ```
 
