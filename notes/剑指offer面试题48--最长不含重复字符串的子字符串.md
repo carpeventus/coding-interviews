@@ -35,25 +35,53 @@ public class LongestSubstring {
             // 字符第一次出现，或者d > f(i -1)
             if (preIndex == -1 || i - preIndex > curLen) curLen++;
             // d <= f(i -1) 
-            else {
-                if (curLen > maxLen) maxLen = curLen;
-                curLen = i - preIndex;
-            }
+            else curLen = i - preIndex;
             // 记录当前字符出现的位置
             position[str.charAt(i) - 'a'] = i;
+            if (curLen > maxLen) maxLen = curLen;
         }
-        if (curLen > maxLen) maxLen = curLen;
         return maxLen;
     }
 }
 
 ```
 
-用了一个数组position代替哈希表，记录'a'~'z'每个字符上次出现的位置，能以O(1)的时间完成，先要将position中的值全初始化为-1，因为上次出现的位置可能含有索引0。 curLen就是上面说到的$f(i -1)$
+用了一个数组position代替哈希表，记录'a'~'z'每个字符上次出现的位置，能以O(1)的时间完成，先要将position中的值全初始化为-1，因为上次出现的位置可能含有索引0。 curLen就是上面说到的$f(i -1)$。
 
-如果某个字符第一次出现，那么它上次出现的位置preIndex为-1。当前最长不重复子字符串直接加1。
+类似的解法。
 
-只有else语句中curLen才可能变小，因此要即使保存到maxLen，因为这个curLen可能就是最长的。而且if语句中curLen++并没有和maxLen比较，所以除了循环后还要再和maxLen比较一次。
+用一个全局preIndex表示重复字符的最远位置，或者说上一次出现重复字符的位置。
+
+还是上面的例子。
+
+- 当`d <= f(i-1)`，如bdcefgc，在当前c未出现时，preIndex是-1，因为还没有出现过重复字符，当前c出现后，有重复字符了，preIndex是索引2处的c。i - preIndex == 4就表示了以当前c结尾的最长不重复子串长度。
+- 当`d > f(i-1)`，如erabcdabr，当前r未出现时，上一个重复字符是b，其preIndex是3。当前r出现后，r上一次出现的位置是1，比较两者，显然b的上次出现位置靠右些，所以应该以b的preIndex为准（如果以r的preIndex为准，会将重复的b包含进去）
+
+综和以上两种情况，需要计算1）不计入当前字符时最近一个重复字符的上次出现位置，2）算上当前字符时，当前字符的上次出现位置。取这两者的最大值，即取两个位置中更靠后的位置。`preIndex = Math.max(preIndex, position[ch - 'a'])`，然后`i - preIndex`表示以位置i处字符结尾的最长不重复子串的长度。
+
+```java
+public class LongestSubstring {
+    public int findLongestSubstring(String str) {
+        int curLen = 0;
+        int maxLen = 0;
+        int preIndex = -1;
+        // 0~25表示a~z，position[0] = index,表明a上次出现在index处
+        int[] position = new int[26];
+        for (int i = 0; i < 26; i++) {
+            position[i] = -1;
+        }
+
+        for (int i = 0; i < str.length(); i++) {
+            preIndex = Math.max(preIndex, position[str.charAt(i) - 'a']);
+			curLen = i - preIndex;
+            // 记录当前字符出现的位置
+            position[str.charAt(i) - 'a'] = i;
+            maxLen = Math.max(curLen, maxLen);
+        }
+        return maxLen;
+    }
+}
+```
 
 ---
 
