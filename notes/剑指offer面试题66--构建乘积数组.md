@@ -18,7 +18,7 @@
 
 根据这些关系计算出C[i]和D[i]，最后求得`B[i] = C[i] * D[i]`即可。
 
-![https://www.cnblogs.com/wxdjss](http://obvjfxxhr.bkt.clouddn.com/947994-20160430170929925-1177273395.png)
+![](http://picmeup.oss-cn-hangzhou.aliyuncs.com/coding/Snipaste_2018-10-20_21-55-32.png)
 
 如上图，表中每一行的第一个数就是其后每个数字连乘，没有被乘上的数字A[i]就用1表示了，反正乘积不变。显然C[0] = 1,我们可以用`C[i] = C[i -1]*A[i -1]`计算出对角线左边的三角中各个A[i]的值；显然D[n -1] = 1,再`D[i] = D[i + 1]*A[i + 1]`计算对角线右边的三角中各个A[i]的值，然后将两者相乘就能得到B[i]。
 

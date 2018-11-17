@@ -188,7 +188,7 @@ public ListNode deleteDuplication(ListNode pHead) {
     	}
   	}
   	// 这里不能返回pHead，因为pHead也可能被删除了
-  	return pre.next;
+  	return first.next;
 }
 ```
 
