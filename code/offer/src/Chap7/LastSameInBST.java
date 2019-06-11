@@ -7,7 +7,6 @@ public class LastSameInBST {
     private class Node {
         private Node left, right;
         private int val;
-
         public Node(int val) {
             this.val = val;
         }

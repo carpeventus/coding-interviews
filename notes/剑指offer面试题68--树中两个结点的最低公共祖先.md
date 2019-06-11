@@ -29,9 +29,9 @@ public class LastSameInBST {
         Node cur = root;
         while (cur != null) {
             if (cur.val < a.val && cur.val < b.val) {
-                cur = cur.right;
-            } else if (cur.val > a.val && cur.val > b.val) {
                 cur = cur.left;
+            } else if (cur.val > a.val && cur.val > b.val) {
+                cur = cur.right;
             } else {
                 return cur;
             }
