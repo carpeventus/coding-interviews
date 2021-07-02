@@ -73,6 +73,56 @@ public class StackIncludeFuncMin {
 
 举点例子模拟能很好地帮助我们理解。
 
+**另一种方法**
+
+- 如果当前值小于等于辅助栈中的最小值，就入栈；否则不入栈。辅助队列中的元素单调递增，最小值位于栈顶。
+- 出栈时，如果弹出的元素和辅助栈的栈顶值一致，则辅助栈也需要弹出该值。
+
+
+```java
+class MinStack {
+
+    private LinkedList<Integer> stack;
+    private LinkedList<Integer> minStack;
+
+    /** initialize your data structure here. */
+    public MinStack() {
+        stack=new LinkedList<>();
+        minStack = new LinkedList<>();
+    }
+
+    public void push(int x) {
+        stack.push(x);
+        if (minStack.isEmpty() || x <= minStack.peek()) {
+            minStack.push(x);
+        }
+    }
+
+    public void pop() {
+        if (stack.isEmpty()) {
+            return;
+        }
+        if (stack.pop().equals(minStack.peek())) {
+            minStack.pop();
+        }
+    }
+
+    public int top() {
+        if (stack.isEmpty()) {
+            return -1;
+        }
+        return stack.peek();
+    }
+
+    public int min() {
+        if (minStack.isEmpty()) {
+            return -1;
+        }
+        return minStack.peek();
+    }
+}
+```
+
 ---
 
 by @sunhaiyu
