@@ -1,9 +1,8 @@
 package Chap3;
 
-/**
- * 给定单向链表的头指针和一个结点指针，定义一个函数在O(1)时间内删除该结点。假设要删除的结点确实在链表中
- */
 public class DeleteNode {
+
+    private Node first;
 
     private class Node {
         int val;
@@ -13,7 +12,7 @@ public class DeleteNode {
     /**
      * 常规方法，从first开始找到要删除结点的前一个结点，时间复杂度为O(n)
      */
-    public void deleteNode_2(Node first, Node toBeDel) {
+    public void deleteNode_2(Node toBeDel) {
         if (first == null || toBeDel == null) {
             return;
         }
@@ -22,18 +21,21 @@ public class DeleteNode {
             first = first.next;
         } else {
             Node cur = first;
-            while (cur.next != toBeDel) {
+            // 找到被删除结点的前一个结点
+            while (cur != null && cur.next != toBeDel) {
                 cur = cur.next;
             }
-            // cur为toBeDel的前一个结点
-            cur.next = cur.next.next;
+            if (cur != null) {
+                // cur为toBeDel的前一个结点
+                cur.next = cur.next.next;
+            }
         }
     }
 
     /**
      * 将toBeDel的下一个结点j的值复制给toBeDel。然后将toBeDel指向j的下一个结点
      */
-    public void deleteNode(Node first, Node toBeDel) {
+    public void deleteNode(Node toBeDel) {
         if (first == null || toBeDel == null) {
             return;
         }
