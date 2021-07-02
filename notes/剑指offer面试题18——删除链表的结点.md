@@ -13,6 +13,8 @@ package Chap3;
 
 public class DeleteNode {
 
+    private Node first;
+
     private class Node {
         int val;
         Node next;
@@ -21,7 +23,7 @@ public class DeleteNode {
     /**
      * 常规方法，从first开始找到要删除结点的前一个结点，时间复杂度为O(n)
      */
-    public void deleteNode_2(Node first, Node toBeDel) {
+    public void deleteNode_2(Node toBeDel) {
         if (first == null || toBeDel == null) {
             return;
         }
@@ -30,16 +32,17 @@ public class DeleteNode {
             first = first.next;
         } else {
             Node cur = first;
-          	// 找到被删除结点的前一个结点
-            while (cur.next != toBeDel) {
+            // 找到被删除结点的前一个结点
+            while (cur != null && cur.next != toBeDel) {
                 cur = cur.next;
             }
-            // cur为toBeDel的前一个结点
-            cur.next = cur.next.next;
+            if (cur != null) {
+                // cur为toBeDel的前一个结点
+                cur.next = cur.next.next;
+            }
         }
     }
 }
-
 ```
 
 试想一个简单例子，下面是一个链表，假设要删除的结点是C。按照上面的思路是从A开始遍历，找到D的前一个结点B后，然后令B.next = D。
@@ -65,29 +68,30 @@ A -> B -> D(new)
 更特殊的情况：如果删除的结点既是最后一个结点又是头结点（只有一个结点的链表），那么直接将头结点置空即可。
 
 ```java
+
 /**
-* 将toBeDel的下一个结点j的值复制给toBeDel。然后将toBeDel指向j的下一个结点
-*/
-public void deleteNode(Node first, Node toBeDel) {
-  	if (first == null || toBeDel == null) {
-    	return;
-  	}
-  	// 要删除的不是最后一个结点
-  	if (toBeDel.next != null) {
-    	Node p = toBeDel.next;
-    	toBeDel.val = p.val;
-    	toBeDel.next = p.next;
-    	// 是尾结点也是头结点
-  	} else if (first == toBeDel) {
-    	first = first.next;
-    // 仅仅是尾结点，即在含有多个结点的链表中删除尾结点
-  	} else {
-    	Node cur = first;
-    	while (cur.next != toBeDel) {
-      		cur = cur.next;
-    	}
-    	cur.next = null;
-  	}
+ * 将toBeDel的下一个结点j的值复制给toBeDel。然后将toBeDel指向j的下一个结点
+ */
+public void deleteNode(Node toBeDel) {
+    if (first == null || toBeDel == null) {
+        return;
+    }
+    // 要删除的不是最后一个结点
+    if (toBeDel.next != null) {
+        Node p = toBeDel.next;
+        toBeDel.val = p.val;
+        toBeDel.next = p.next;
+        // 是尾结点也是头结点
+    } else if (first == toBeDel) {
+        first = first.next;
+        // 仅仅是尾结点，即在含有多个结点的链表中删除尾结点
+    } else {
+        Node cur = first;
+        while (cur.next != toBeDel) {
+            cur = cur.next;
+        }
+        cur.next = null;
+    }
 
 }
 ```
@@ -165,30 +169,30 @@ ListNode cur = pHead;
 
 ```java
 public ListNode deleteDuplication(ListNode pHead) {
-  	if (pHead == null || pHead.next == null) {
-    	return pHead;
-  	}
-  	// 建立一个头结点代替原来的pHead
-  	ListNode first = new ListNode(pHead.val - 1);
-  	first.next = pHead;
-  	// 当前结点的前一个结点
-  	ListNode pre = first;
-  	// 当前结点
-  	ListNode cur = pHead;
-  	while (cur != null && cur.next != null) {
-    	if (cur.val == cur.next.val) {
-      	int val = cur.val;
-      	while (cur != null && (cur.val == val)) {
-        	cur = cur.next;
-      	}
-      	pre.next = cur;
-    	} else {
-      	pre = cur;
-      	cur = cur.next;
-    	}
-  	}
-  	// 这里不能返回pHead，因为pHead也可能被删除了
-  	return first.next;
+    if (pHead == null || pHead.next == null) {
+        return pHead;
+    }
+    // 建立一个头结点代替原来的pHead
+    ListNode first = new ListNode(pHead.val - 1);
+    first.next = pHead;
+    // 当前结点的前一个结点
+    ListNode pre = first;
+    // 当前结点
+    ListNode cur = pHead;
+    while (cur != null && cur.next != null) {
+        if (cur.val == cur.next.val) {
+            int val = cur.val;
+            while (cur != null && (cur.val == val)) {
+                cur = cur.next;
+            }
+            pre.next = cur;
+        } else {
+            pre = cur;
+            cur = cur.next;
+        }
+    }
+    // 这里不能返回pHead，因为pHead也可能被删除了
+    return first.next;
 }
 ```
 
