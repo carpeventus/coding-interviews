@@ -51,7 +51,7 @@ public class MaxInWindow {
 
  ......
 
-再看最后一个元素1，它入列前，队列中有6和5，且6位于队列头是窗口中的最大值，按照之前的做法，应该将1入列，但是窗口的大小为3，此时队列头的6已经在窗口之外了，所以要讲6从队列中弹出，那么此时队列中还剩下5和1且5位于队列头，所以最后一个窗口中的最大值是5。**那么如何判断某个元素还在不在窗口内呢？我们应该在往队列中存元素的下标而不是元素本身。**若当前正访问的元素的下标与窗口最大值的下标（即队列头元素的下标）超过了窗口的宽度，就应该从队列头删除这个在滑动窗口之外的最大值。
+如果还有最后一个元素1，它入列前，队列中有6和5，且6位于队列头是窗口中的最大值，按照之前的做法，应该将1入列，但是窗口的大小为3，此时队列头的6已经在窗口之外了，所以要将6从队列中弹出，那么此时队列中还剩下5和1且5位于队列头，所以最后一个窗口中的最大值是5。**那么如何判断某个元素还在不在窗口内呢？我们应该在往队列中存元素的下标而不是元素本身**。若当前正访问的元素的下标与窗口最大值的下标（即队列头元素的下标）超过了窗口的宽度，就应该从队列头删除这个在滑动窗口之外的最大值。
 
 总之就是：
 
@@ -91,55 +91,56 @@ public class MaxInWindow {
 > 定义一个队列，实现max方法得到队列中的最大值。要求入列、出列以及邱最大值的方法时间复杂度都是O(1)
 > ```
 
-此题和面试题30“包含min的栈”同一个思路。
 
-一个dataQueue正常入列、出列元素，为了以O(1)的时间获取当前队列的最大值，需要使用一个maxQueue存放当前队列中最大值。具体来说就是，**如果即将要存入的元素比当前最大值还大，那么存入这个元素；否则再次存入当前最大值。**
+思路和上题类似。
+
+使用一个辅助队列（双端队列），队列头记录最大值，队列中的元素是单调递减的。
+
+- 即将要入列的的元素比队列中哪些元素大，就将那些元素先从队列中删除，然后入列新元素；
+- 出列时，如果弹出的元素和辅助队列的队列头值一致，则辅助队列也需要弹出该值。
 
 ```java
-package Chap6;
+class MaxQueue {
 
-import java.util.Deque;
-import java.util.LinkedList;
+    private Queue<Integer> queue;
+    private Deque<Integer> maxQueue;
 
-public class MaxQueue {
-    private Deque<Integer> maxDeque = new LinkedList<>();
-    private Deque<Integer> dataDeque = new LinkedList<>();
 
-    public void offer(int number) {
-        dataDeque.offerLast(number);
-      	// 即将要存入的元素比当前队列最大值还大，存入该元素
-        if (maxDeque.isEmpty() || number > maxDeque.peekFirst()) maxDeque.offerFirst(number);
-      	// 即将要存入的元素不超过当前队列最大值，再将最大值存入一次
-        else maxDeque.offerFirst(maxDeque.peekFirst());
+    public MaxQueue() {
+        queue = new LinkedList<>();
+        maxQueue = new LinkedList<>();
     }
 
-    public void poll() {
-        if (dataDeque.isEmpty()) throw new RuntimeException("队列已空");
-        dataDeque.pollFirst();
-        maxDeque.pollFirst();
+    public int max_value() {
+        if (maxQueue.isEmpty()) {
+            return -1;
+        }
+        return maxQueue.peekFirst();
     }
 
-    public int max() {
-        if (maxDeque.isEmpty()) throw new RuntimeException("队列已空");
-        return maxDeque.peekFirst();
+    public void push_back(int value) {
+        queue.offer(value);
+        while (!maxQueue.isEmpty() && value > maxQueue.peekLast()) {
+            maxQueue.pollLast();
+        }
+        maxQueue.offerLast(value);
+
     }
+
+    public int pop_front() {
+        if (queue.isEmpty()) {
+            return -1;
+        }
+        int tmp =  queue.poll();
+        if (tmp == maxQueue.peekFirst()) {
+            maxQueue.pollFirst();
+        }
+        return tmp;
+    }
+
 }
 
 ```
-
-还是上面的例子{2, 3, 4, 2, 6, 2, 5}，分析随着各个元素入列dataQueue和maxQueue的情况。
-
-| 操作   | dataQueue           | maxQueue            | max  |
-| ---- | ------------------- | ------------------- | ---- |
-| 2入列  | 2                   | 2                   | 2    |
-| 3入列  | 2, 3                | 3, 2                | 3    |
-| 4入列  | 2, 3, 4             | 4, 3, 2             | 4    |
-| 2入列  | 2, 3, 4, 2          | 4, 4, 3, 2          | 4    |
-| 6入列  | 2, 3, 4, 2, 6       | 6, 4, 4, 3, 2       | 6    |
-| 2入列  | 2, 3, 4, 2, 6, 2    | 6, 6, 4, 4, 3, 2    | 6    |
-| 5入列  | 2, 3, 4, 2, 6, 2, 5 | 6, 6, 6, 4, 4, 3, 2 | 6    |
-
-出列的话两个队列同时出列一个元素，保证了maxQueue的队列头元素始终是dataQueue的当前最大值。
 
 ---
 
