@@ -18,23 +18,28 @@ public class LastSameInTree {
 
         LinkedList<Node> path1 = new LinkedList<>();
         LinkedList<Node> path2 = new LinkedList<>();
-        collectNode(root, a, path1);
-        collectNode(root, b, path2);
+        
+         LinkedList<Node> res1 = new LinkedList<>();
+         LinkedList<Node> res2 = new LinkedList<>();
+        collectNode(root, a, path1, res1);
+        collectNode(root, b, path2, res2);
         return getLastSameNode(path1, path2);
     }
 
     /**
      * 收集含有结点node的路径上的所有结点，形成一条链表
      */
-    private boolean collectNode(Node root, Node node, LinkedList<Node> path) {
-        if (root == node) return true;
+    private void collectNode(Node root, Node node, LinkedList<Node> path, LinkedList<Node> res) {
+        if (root == null || node == null) return;
         path.add(root);
+        if (root = node) {
+            res.addAll(path);
+        }
         for (Node child : root.children) {
-            if (collectNode(child, node, path)) return true;
+            if (collectNode(child, node, path));
         }
         // 该条路径上没找到结点node就要从路径中移除
-        path.removeLast();
-        return false;
+        path.remove(path.size() - 1);
     }
 
     /**
