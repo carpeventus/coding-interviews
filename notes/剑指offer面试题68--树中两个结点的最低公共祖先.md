@@ -103,9 +103,9 @@ public class LastSameInTreeParent {
 
 ```
 
-## 普通树，没有指向父结点的指针
+## 普通二叉树，没有指向父结点的指针
 
-这道题再加大难度，如果没有指向父结点的指针呢？是否还能转换成两个链表的第一个公共结点来解决？
+这道题再加大难度，如果没有指向父结点的指针呢？
 
 想办法创造链表。两个输入结点如果在树中存在，那么**从根结点开始向下的某条路径中必然包含这个结点**，使用两个链表分别保存包含这两个结点的路径。这样就可以把问题转换成求两个链表的第一个公共结点了。
 
@@ -130,23 +130,28 @@ public class LastSameInTree {
 
         LinkedList<Node> path1 = new LinkedList<>();
         LinkedList<Node> path2 = new LinkedList<>();
-        collectNode(root, a, path1);
-        collectNode(root, b, path2);
+        
+         LinkedList<Node> res1 = new LinkedList<>();
+         LinkedList<Node> res2 = new LinkedList<>();
+        collectNode(root, a, path1, res1);
+        collectNode(root, b, path2, res2);
         return getLastSameNode(path1, path2);
     }
 
     /**
      * 收集含有结点node的路径上的所有结点，形成一条链表
      */
-    private boolean collectNode(Node root, Node node, LinkedList<Node> path) {
-        if (root == node) return true;
+    private void collectNode(Node root, Node node, LinkedList<Node> path, LinkedList<Node> res) {
+        if (root == null || node == null) return;
         path.add(root);
+        if (root = node) {
+            res.addAll(path);
+        }
         for (Node child : root.children) {
-            if (collectNode(child, node, path)) return true;
+            if (collectNode(child, node, path));
         }
         // 该条路径上没找到结点node就要从路径中移除
-        path.removeLast();
-        return false;
+        path.remove(path.size() - 1);
     }
 
     /**
@@ -171,6 +176,25 @@ public class LastSameInTree {
 得到两条路径需要遍历树两次，每次都是$O(n)$的时间，而每条路径需要的空间在平均情况下是$O(\lg n)$,最差情况下(树退化成链表)是$O(n)$
 
 ---
+
+
+普通二叉树的递归解法
+
+来自[LeetCode](https://leetcode-cn.com/problems/er-cha-shu-de-zui-jin-gong-gong-zu-xian-lcof/)
+
+```java
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root == null) return null; // 如果树为空，直接返回null
+        if(root == p || root == q) return root; // 如果 p和q中有等于 root的，那么它们的最近公共祖先即为root（一个节点也可以是它自己的祖先）
+        TreeNode left = lowestCommonAncestor(root.left, p, q); // 递归遍历左子树，只要在左子树中找到了p或q，则先找到谁就返回谁
+        TreeNode right = lowestCommonAncestor(root.right, p, q); // 递归遍历右子树，只要在右子树中找到了p或q，则先找到谁就返回谁
+        if(left == null) return right; // 如果在左子树中 p和 q都找不到，则 p和 q一定都在右子树中，右子树中先遍历到的那个就是最近公共祖先（一个节点也可以是它自己的祖先）
+        else if(right == null) return left; // 否则，如果 left不为空，在左子树中有找到节点（p或q），这时候要再判断一下右子树中的情况，如果在右子树中，p和q都找不到，则 p和q一定都在左子树中，左子树中先遍历到的那个就是最近公共祖先（一个节点也可以是它自己的祖先）
+        else return root; //否则，当 left和 right均不为空时，说明 p、q节点分别在 root异侧, 最近公共祖先即为 root
+    }
+}
+```
 
 by @sunhaiyu
 
